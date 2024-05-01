@@ -1,0 +1,8 @@
+1. git clone REPO
+2. generate personal access token
+3. git config --global user.name "Łukasz Kaźmierczak" 
+4. git config --global user.email "lucas.kazmierczak@gmail.com" 
+5. git remote set-url origin https://USERNAME:TOKEN@github.com/USERNAME/REPO.git
+6. git commit
+7. git push
+
