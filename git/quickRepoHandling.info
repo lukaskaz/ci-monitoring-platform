@@ -3,6 +3,7 @@ generate personal access token
 git config --global user.name "Łukasz Kaźmierczak" 
 git config --global user.email "lucas.kazmierczak@gmail.com" 
 git remote set-url origin https://USERNAME:TOKEN@github.com/USERNAME/REPO.git
+ex. git remote set-url origin https://lukaskaz:token@github.com/lukaskaz/ci-monitoring-platform.git
 git commit
 git push
 
