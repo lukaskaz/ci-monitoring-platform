@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=GitBoard
+Exec=/usr/bin/firefox -kiosk https://gitboard.io/dashboard
+
