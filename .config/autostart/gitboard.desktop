@@ -1,5 +1,8 @@
 [Desktop Entry]
+Name=Start-Gitboard
+Comment=Starts GitBoard view
+Icon=/usr/share/icons/gnome/256x256/mimetypes/www.png
 Type=Application
-Name=GitBoard
-Exec=/usr/bin/firefox -kiosk https://gitboard.io/dashboard
+Exec=/usr/bin/firefox -kiosk --new-window https://gitboard.io/dashboard
+Terminal=false
 

@@ -1,8 +1,1 @@
-[Desktop Entry]
-Name=Start-Gitboard
-Comment=Starts GitBoard view
-Icon=/usr/share/icons/gnome/256x256/mimetypes/www.png
-Type=Application
-Exec=/usr/bin/firefox -kiosk https://gitboard.io/dashboard
-Terminal=false
-
+/home/lukasz/.config/autostart/gitboard.desktop
