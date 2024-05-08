@@ -12,13 +12,20 @@ PARAM=$2
 
 declare -A OPERMAP=( \
 	[refresh]=_refreshcb \
-	[zoom]=_zoomcb \
+	[zoomkbd]=_zoomkbdcb \
+	[zoommouse]=_zoommousecb \
 	[restart]=_restartcb \
 )
 
-declare -A ZOOMMAP=( \
+declare -A ZOOMKBDMAP=( \
 	[-]="minus" \
 	[+]="plus" \
+	[reset]="0" \
+)
+
+declare -A ZOOMMOUSEMAP=( \
+	[-]="click 5" \
+	[+]="click 4" \
 )
 
 function _isParamInMap
@@ -26,7 +33,7 @@ function _isParamInMap
 	local -n MAP=$1
 	local PARAM=$2
 
-	echo ${!MAP[@]} | grep -o $PARAM &> /dev/null
+	echo ${!MAP[@]} | grep -wo $PARAM &> /dev/null
 	return $?
 }
 
@@ -36,53 +43,61 @@ function _runOnWindow
 	local ACTION=$2
 	
 	echo "Running: DISPLAY=$DISPLAY xdotool search --onlyvisible \
---name $WEBSITE windowactivate key $ACTION"
+--name $WEBSITE windowactivate $ACTION"
 	WINDOW=$(xdotool search --onlyvisible --name "$WEBSITE")
 	if [ -z "$WINDOW" ]; then
-		_refreshemptysite
+		local REFRESH="key Ctrl+F5"
+		WINDOW=$(xdotool search --onlyvisible --name "$NOWEBSITEREGEX")
+		if [ -z "$WINDOW" ]; then return 2; fi 
+		xdotool windowactivate "$WINDOW"
+		xdotool $REFRESH
 	fi
 	WINDOW=$(xdotool search --onlyvisible --name "$WEBSITE")
 	if [ -n "$WINDOW" ]; then
 		xdotool windowactivate "$WINDOW"
-		xdotool key "$ACTION"
+		xdotool $ACTION
 		return $?
 	fi
 	return 1
 }
 
-function _refreshemptysite
-{
-	local PARAM=$1
-	local ACTION="Ctrl+F5"
-
-	_runOnWindow "$NOWEBSITEREGEX" "$ACTION"
-	return $?
-}
-
 function _refreshcb
 {
 	local PARAM=$1
-	local ACTION="Ctrl+F5"
+	local ACTION="key Ctrl+F5"
 
 	_runOnWindow "$WEBSITEREGEX" "$ACTION"
 	return $?
 }
 
-function _zoomcb
+function _zoomkbdcb
 {
 	local PARAM=$1
-	local ACTION="Ctrl+"
+	local ACTION="key Ctrl+%s"
 
-	_isParamInMap ZOOMMAP $PARAM
+	_isParamInMap ZOOMKBDMAP $PARAM
 	if [ $? -ne 0 ]; then echo "[$FUNCNAME] Param '$PARAM' not supported"; exit 3; fi
-	_runOnWindow "$WEBSITEREGEX" "$ACTION${ZOOMMAP[$PARAM]}"
+	ACTION=$(printf "$ACTION" "${ZOOMKBDMAP[$PARAM]}")
+	_runOnWindow "$WEBSITEREGEX" "$ACTION"
+	return $?
+}
+
+function _zoommousecb
+{
+	local PARAM=$1
+	local ACTION="keydown ctrl %s keyup ctrl"
+
+	_isParamInMap ZOOMMOUSEMAP $PARAM
+	if [ $? -ne 0 ]; then echo "[$FUNCNAME] Param '$PARAM' not supported"; exit 3; fi
+	ACTION=$(printf "$ACTION" "${ZOOMMOUSEMAP[$PARAM]}")
+	_runOnWindow "$WEBSITEREGEX" "$ACTION"
 	return $?
 }
 
 function _restartcb
 {
 	local PARAM=$1
-	local ACTION="Ctrl+F4"
+	local ACTION="key Ctrl+F4"
 
 	_runOnWindow "$WEBSITEREGEX" "$ACTION"
 	echo "Running: DISPLAY=$DISPLAY gio launch $DESKTOPFILE"
@@ -91,10 +106,16 @@ function _restartcb
 	return $?
 }
 
+function _help
+{
+	echo "Available commands for ./$(basename $0)"
+	echo "${!OPERMAP[@]}"
+
+}
 
 # main
 _isParamInMap OPERMAP $OPER
-if [ $? -ne 0 ]; then echo "Operation '$OPER' not supported"; exit 2; fi
+if [ $? -ne 0 ]; then _help; exit 99; fi
 
 ${OPERMAP[$OPER]} $PARAM
 exit $?
