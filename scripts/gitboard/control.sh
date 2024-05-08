@@ -110,7 +110,6 @@ function _help
 {
 	echo "Available commands for ./$(basename $0)"
 	echo "${!OPERMAP[@]}"
-
 }
 
 # main
