@@ -1,4 +1,4 @@
 sudo adduser xrdp ssl-cert
 sudo nano /etc/X11/xrdp/xorg.conf -> Option "DRMDevice" ""
 sudo deluser pi render
-
+sudo raspi-config + update Wayland->X11
