@@ -6,3 +6,14 @@ sudo sed -i 's#exec systemd-inhibit --what=handle-power-key /usr/bin/lxsession -
 
 sudo apt install x11vnc
 x11vnc -display :0 -usepw
+
+/etc/xrdp/xrdp.ini
+--
+[xrdp]
+name=Remote Desktop
+lib=libvnc.so
+username=ask
+password=ask
+ip=127.0.0.1
+port=5900
+--
