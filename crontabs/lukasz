@@ -27,4 +27,3 @@
 59 23 * * * /home/lukasz/scripts/display/control.sh off
 00 10 * * * /home/lukasz/scripts/display/control.sh on
 */15 * * * * /home/lukasz/scripts/gitboard/control.sh refresh
-
