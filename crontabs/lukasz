@@ -24,7 +24,7 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-59 23 * * * /home/lukasz/Scripts/display/control.sh off
-00 10 * * * /home/lukasz/Scripts/display/control.sh on
-0 * * * * /home/lukasz/Scripts/gitboard/control.sh refresh
+59 23 * * * /home/lukasz/scripts/display/control.sh off
+00 10 * * * /home/lukasz/scripts/display/control.sh on
+*/15 * * * * /home/lukasz/scripts/gitboard/control.sh refresh
 
